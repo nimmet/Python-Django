@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseNotFound,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseNotFound,HttpResponseRedirect,Http404
 from django.urls import reverse
+from django.template.loader import render_to_string
+
 # Create your views here.
 
 monthly_challenges = {
@@ -15,21 +17,25 @@ monthly_challenges = {
     "september": "Lerne Deautsch, es it wichtig!",
     "october": "Raus, das  wetter is seher gut",
     "november": "Walk for at least 20 minutes every day!",
-    "december": "gehe ins schwimmbad"
+    "december": None,
+    # "december": "gehe ins schwimmbad"
 }
 
 def index(request):
     
-    list_items = ""
+    # list_items = ""
     months = list(monthly_challenges.keys())
+    return render(request,"challenges/index.html",{
+      "months": months,  
+    })
     
-    for month in months:
-        capitalized_month = month.capitalize()
-        month_path = reverse("month-challenge", args=[month])
-        list_items += f"<li><a href='{month_path}'>{capitalized_month}</a></li>"
+    # for month in months:
+    #     capitalized_month = month.capitalize()
+    #     month_path = reverse("month-challenge", args=[month])
+    #     list_items += f"<li><a href='{month_path}'>{capitalized_month}</a></li>"
     
-    response_data = f"<ul>{list_items}</ul>"
-    return HttpResponse(response_data)
+    # response_data = f"<ul>{list_items}</ul>"
+    # return HttpResponse(response_data)
 
 def feb(request):
     return  HttpResponse("Febuary challenges here!")
@@ -67,8 +73,14 @@ def monthly_challenge_by_number(request, month):
 def monthly_challenge(request, month):
     try:
         challenge_text = monthly_challenges[month] 
-        response_data  = f"<h1>{challenge_text}</h1>"
-        return HttpResponse(response_data)   
+        return render(request,"challenges/challenge.html",{
+            "text": challenge_text,
+            "month_name":month,
+        })
+        # response_data  = render_to_string("challenges/challenge.html")
+        # return HttpResponse(response_data)   
     except:
-        return HttpResponseNotFound("<h1>This month is not supported</h1>")    
+        # response_data = render_to_string("404.html")
+        # return HttpResponseNotFound(response_data)    
+        raise Http404()
     
