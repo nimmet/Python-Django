@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+My Blog
+{% endblock  %}
+
+{% block css_files %}
+
+<link rel="stylesheet" href="{% static "blog/index.css"%}">
+
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1><a href="">Uyghur' Blog</a></h1>
+    <nav>
+        <a href="">All Posts</a>
+    </nav>
+</header>
+
+
+<section id="welcome">
+    <header>
+        <img src="{% static "blog/images/uyghur.jpg"%}" alt="Uyghur - The author of this blog" />
+        <h2>Uyghur's Blog</h2>
+    </header>
+    <p>Hi, I am Uyghur and I love to blog about tech and the world!</p>
+</section>
+
+<section id="latest-posts">
+    <h2>My Latest Thoughts</h2>
+    <ul>
+        <li>
+            <article class="post">
+<a href="">
+    <img src="{% static "blog/images/mountains.jpg"%}" alt="Mountain Hiking">
+    <div class="post_content">
+        <h3>Mountain Hiking</h3>
+        <p>There is nothing like the views you get when hiking in the mountains!</p>
+    </div>
+</a>
+            </article>
+        </li>
+    </ul>
+</section>
+
+<section id="about">
+    <h2>What I Do</h2>
+    <p>I love programming, I love play video game and also enjoy the life. But dont forget, life is not so easy so 
+        dont forget to fight for life!
+    </p>
+    <p>
+        (SOC Analyst | Cybersecurity Analyst | Pentest+ | Security+ | Network Vulnerability Assessment Professional | Splunk | IBM QRadar | Python | Java | AWS)
+    </p>
+</section>
+{% endblock %}
