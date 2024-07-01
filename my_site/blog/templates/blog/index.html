@@ -6,17 +6,13 @@ My Blog
 
 {% block css_files %}
 
+<link rel="stylesheet" href="{% static "blog/post.css"%}">
 <link rel="stylesheet" href="{% static "blog/index.css"%}">
 
 {% endblock %}
 
 {% block content %}
-<header>
-    <h1><a href="">Uyghur' Blog</a></h1>
-    <nav>
-        <a href="">All Posts</a>
-    </nav>
-</header>
+
 
 
 <section id="welcome">
@@ -30,17 +26,10 @@ My Blog
 <section id="latest-posts">
     <h2>My Latest Thoughts</h2>
     <ul>
-        <li>
-            <article class="post">
-<a href="">
-    <img src="{% static "blog/images/mountains.jpg"%}" alt="Mountain Hiking">
-    <div class="post_content">
-        <h3>Mountain Hiking</h3>
-        <p>There is nothing like the views you get when hiking in the mountains!</p>
-    </div>
-</a>
-            </article>
-        </li>
+        {% for post in posts %}
+        {% include "blog/includes/post.html" %}
+        {% endfor %}
+        
     </ul>
 </section>
 
