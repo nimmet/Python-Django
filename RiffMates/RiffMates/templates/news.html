@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiffMates News</title>
+</head>
+<body>
+    <h1>RiffMates News</h1>
+    <ul>
+        {% for item in news%}
+        {% if forloop.first %}
+       <a href="{% url 'info' %}"> <li>{{item}}</li></a>
+      
+       {% else %}
+       <a href="{% url 'info_json' %}"> <li>{{item}}</li></a>
+        {% endif %}
+
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -23,8 +23,9 @@ urlpatterns = [
     path("",home_views.home),
     path("credits/",home_views.credits),
     path("about/",home_views.about),
-    path("info/",home_views.info),
-    path("info-json/",home_views.info_json),
+    path("info/",home_views.info,name="info"),
+    path("info-json/",home_views.info_json,name="info_json"),
+    path("news/",home_views.news,name="news"),
 
     
     

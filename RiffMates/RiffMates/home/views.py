@@ -3,6 +3,15 @@ from django.http import JsonResponse
 
 # Create your views here.
 
+def news(request):
+    data = {
+        'news':[
+        "RiffMates now has a news page!",
+        "RiffMates has its first web page",
+         ],}
+    return render(request,"news2.html",data)
+    
+
 def home(request):
     return HttpResponse("<h2>Home</h2>")
 
