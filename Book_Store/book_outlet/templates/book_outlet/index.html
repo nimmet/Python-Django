@@ -1,0 +1,16 @@
+
+
+{% block title %}
+All Books
+{% endblock  %}
+
+{% block content %}
+<ul>
+    {% for book in books  %}
+    <li>
+        {{ book.title }} (Rating: {{ book.rating }})</li>
+    </li>
+    
+    {% endfor %}
+</ul>
+{% endblock %}
