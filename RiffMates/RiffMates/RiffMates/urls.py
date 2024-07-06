@@ -26,6 +26,7 @@ urlpatterns = [
     path("info/",home_views.info,name="info"),
     path("info-json/",home_views.info_json,name="info_json"),
     path("news/",home_views.news,name="news"),
+    path("bands/",include('bands.urls')),
 
     
     
