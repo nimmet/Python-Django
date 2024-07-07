@@ -31,5 +31,5 @@ def musicians(request):
     }
         
     
-    
     return render(request,"musicians.html",data)
+
