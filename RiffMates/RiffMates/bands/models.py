@@ -29,3 +29,10 @@ class Room(models.Model):
     
     def __str__(self):
         return f"Room(id={self.id}, name={self.name})"
+    
+    
+class Band(models.Model):
+    name = models.CharField(max_length=20)
+    musicians = models.ManyToManyField(Musician)
+    def __str__(self):
+        return f"Band(id={self.id}, name={self.name})"
