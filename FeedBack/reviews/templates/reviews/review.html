@@ -1,4 +1,4 @@
-
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,18 +6,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Review</title>
+    <link rel="stylesheet" href=" {% static 'reviews/styles.css' %}">
 </head>
 <body>
     <form method="POST" action="/">
         {% csrf_token %}
-        {% comment %} {% if has_error %}
-        <p>This form is invalid, please enter a valid username!</p>
-        {% endif %} {% endcomment %}
-        {{ form.user_name.label_tag }}
-        {{ form.user_name}}
-        {{ form.user_name.errors }}
-        {% comment %} <label for="username">Your Name</label>
-        <input type="text" id="username" name="username"> {% endcomment %}
+        {% for field in form  %}
+        <div class="form-control {% if field.errors %} errors {% endif %}">
+
+            {{ field.label_tag }}
+            {{ field}}
+            {{ field.errors }}
+        </div>
+        {% endfor %}
+    
+       
+        
         <button type="submit">Send</button>
     </form>
 </body>
