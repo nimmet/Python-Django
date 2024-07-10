@@ -1,0 +1,7 @@
+{
+    "editor.codeActionsOnSave": {
+
+    },
+    "workbench.settings.useSplitJSON": true,
+    "python.languageServer": "Pylance",
+}
