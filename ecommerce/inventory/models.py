@@ -1,13 +1,27 @@
 from django.db import models
+from django.utils.text import slugify
 import uuid
 
 # Create your models here.
 
 class Category(models.Model):
-    name= models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True)
+    name= models.CharField(max_length=100, unique=True, verbose_name="First Name",help_text = "Enter a category...")
+    slug = models.SlugField(unique=True, blank=True)
     is_active = models.BooleanField(default=False)
-    parent = models.ForeignKey("self", on_delete=models.PROTECT)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT,null=True, blank=True)
+    
+    class Meta:
+        verbose_name = "Inventor Category"
+        verbose_name_plural = "Categories"
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+        
+    
+    def __str__(self):
+        return self.name
 
 
 class SeasonalEvents(models.Model):
@@ -31,32 +45,40 @@ class Product(models.Model):
    
     pid = models.CharField(max_length=255)
     name = models.CharField(max_length=100,unique=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(null=True)
     is_digital = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at = models.DateTimeField(auto_now=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
     stock_status = models.CharField(max_length=3,
                               choices=
                               STOCK_STATUS,
                               default=OUT_OF_STOCK)
     category = models.ForeignKey(Category, on_delete= models.SET_NULL, null=True)
-    seasonal_event = models.ForeignKey(SeasonalEvents, on_delete=models.SET_NULL, null=True)
+    seasonal_event = models.ForeignKey(SeasonalEvents, on_delete=models.SET_NULL,
+                                       null=True, blank=True)
     product_type = models.ManyToManyField("ProductType", related_name="product_type")
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
     
 
 class ProductLine(models.Model):
     
-    price = models.DecimalField()
+    price = models.DecimalField(decimal_places=2, max_digits=5)
     sku = models.UUIDField(default=uuid.uuid4)
     stock_qty = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
     order = models.IntegerField()
     weight = models.FloatField()
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    attribute_value = models.ManyToManyField("AttributeValue", related_name="attribute_value")
+    attribute_values = models.ManyToManyField("AttributeValue", related_name="attribute_values")
     
     
 
@@ -71,12 +93,15 @@ class ProductImage(models.Model):
     
     
 class Attribute(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     description = models.TextField(null=True)
     
 class ProductType(models.Model):
     name = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', on_delete= models.CASCADE)
+    parent = models.ForeignKey('self', on_delete= models.PROTECT, null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.name} {self.parent}"
     
 
 class AttributeValue(models.Model):
