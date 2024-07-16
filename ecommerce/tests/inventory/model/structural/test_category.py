@@ -8,6 +8,20 @@ from inventory.models import Category
 ## Table and Column Validation
 """
 
+@pytest.mark.parametrize("model, expected_field_count",
+                         [
+                             (Category,6,),
+                             
+                          
+                          ]
+                         )
+
+def test_model_structure_field_count(model, expected_field_count):
+    assert (
+        
+        len(model._meta.fields) == expected_field_count
+        ), f"{model.__name__} model has {len(model._meta.fields)} fields, expected {expected_field_count}"
+
 """
 - [ ] Confirm the presence of all required tables within the database schema.
 """
@@ -20,13 +34,6 @@ def test_model_structure_table_exists():
         assert False
     else:
         assert True
-        
-
-def test_model_1():
-    assert True
-    
-def test_structure_2():
-    assert True
         
 
 
@@ -133,24 +140,37 @@ def test_model_structure_default_values(model,field_name, expected_default):
         field.default == expected_default
     ), f"Field '{field_name}' has unexpected default value"
     
-    level_field = model._meta.get_field("level")
     
     assert (
-        
-    )
+        field.default == expected_default    )
     
 
 
 @pytest.mark.parametrize("model,field_name, expected_length",
                          [
                              (Category,"name", 100),
+                             (Category,"slug", 120),
                          ]
 )   
-def test_model_structure_expected_length(model,field_name, expected_length):
+def test_model_structure_column_length(model,field_name, expected_length):
     field = model._meta.get_field(field_name)
     assert (
         field.max_length == expected_length
-    ), f"Field '{field_name}' has unexpected length"    
+    ), f"Field '{field_name}' has unexpected max length"    
+    
+    
+    
+
+@pytest.mark.parametrize("model,field_name, expected_unique",
+                         [
+                             (Category,"slug", True),
+                         ]
+)   
+def test_model_structure_unique_value(model,field_name, expected_unique):
+    field = model._meta.get_field(field_name)
+    assert (
+        field.unique == expected_unique
+    ), f"Field '{field_name}' uniqueness mismatch"  
     
 
 """
