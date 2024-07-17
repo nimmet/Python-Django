@@ -1,6 +1,7 @@
 import pytest
 from django.db import models
-from inventory.models import Category
+
+from inventory.models import AttributeValue, ProductLine, ProductLine_AttributeValue
 
 """
 ## Table and Column Validation
@@ -13,7 +14,7 @@ from inventory.models import Category
 
 def test_model_structure_table_exists():
     try:
-        from inventory.models import Category  # noqa F401
+        from inventory.models import ProductLine_AttributeValue  # noqa F401
     except ImportError:
         assert False
     else:
@@ -28,11 +29,7 @@ def test_model_structure_table_exists():
 @pytest.mark.parametrize(
     "model, field_name, expected_type",
     [
-        (Category, "id", models.AutoField),
-        (Category, "name", models.CharField),
-        (Category, "slug", models.SlugField),
-        (Category, "is_active", models.BooleanField),
-        (Category, "level", models.IntegerField),
+        (ProductLine_AttributeValue, "id", models.AutoField),
     ],
 )
 def test_model_structure_column_data_types(model, field_name, expected_type):
@@ -54,8 +51,8 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
     "model, expected_field_count",
     [
         (
-            Category,
-            6,
+            ProductLine_AttributeValue,
+            3,
         ),  # Replace with the expected number of fields in the SeasonalEvent model
     ],
 )
@@ -74,7 +71,24 @@ def test_model_structure_field_count(model, expected_field_count):
 @pytest.mark.parametrize(
     "model, field_name, expected_type, related_model, on_delete_behavior, allow_null, allow_blank",
     [
-        (Category, "parent", models.ForeignKey, Category, models.PROTECT, True, True),
+        (
+            ProductLine_AttributeValue,
+            "attribute_value",
+            models.ForeignKey,
+            AttributeValue,
+            models.CASCADE,
+            False,
+            False,
+        ),
+        (
+            ProductLine_AttributeValue,
+            "product_line",
+            models.ForeignKey,
+            ProductLine,
+            models.CASCADE,
+            False,
+            False,
+        ),
     ],
 )
 def test_model_structure_relationship(
@@ -126,11 +140,7 @@ def test_model_structure_relationship(
 @pytest.mark.parametrize(
     "model, field_name, expected_nullable",
     [
-        (Category, "id", False),
-        (Category, "name", False),
-        (Category, "slug", False),
-        (Category, "is_active", False),
-        (Category, "level", False),
+        (ProductLine_AttributeValue, "id", False),
     ],
 )
 def test_model_structure_nullable_constraints(model, field_name, expected_nullable):
@@ -148,43 +158,9 @@ def test_model_structure_nullable_constraints(model, field_name, expected_nullab
 # """
 
 
-@pytest.mark.parametrize(
-    "model, field_name, expected_default_value",
-    [
-        (Category, "is_active", False),
-        (Category, "level", 0),
-    ],
-)
-def test_model_structure_default_values(model, field_name, expected_default_value):
-    # Get the field from the model
-    field = model._meta.get_field(field_name)
-
-    # Check if the default value matches the expected value
-    default_value = field.default
-
-    assert default_value == expected_default_value
-
-
 # """
 # - [ ] Ensure that column lengths align with defined requirements.
 # """
-
-
-@pytest.mark.parametrize(
-    "model, field_name, expected_length",
-    [
-        (Category, "name", 100),
-        (Category, "slug", 120),
-    ],
-)
-def test_model_structure_column_lengths(model, field_name, expected_length):
-    # Get the field from the model
-    field = model._meta.get_field(field_name)
-
-    # Check if the max length matches the expected value
-    assert (
-        field.max_length == expected_length
-    ), f"Field '{field_name}' has unexpected max length"
 
 
 # """
@@ -195,11 +171,7 @@ def test_model_structure_column_lengths(model, field_name, expected_length):
 @pytest.mark.parametrize(
     "model, field_name, is_unique",
     [
-        (Category, "id", True),
-        (Category, "name", False),
-        (Category, "slug", True),
-        (Category, "is_active", False),
-        (Category, "level", False),
+        (ProductLine_AttributeValue, "id", True),
     ],
 )
 def test_model_structure_unique_fields(model, field_name, is_unique):
