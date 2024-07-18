@@ -26,6 +26,8 @@ class Room(models.Model):
      
     name = models.CharField(max_length=20)
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = [["name", "venue"]]
     
     def __str__(self):
         return f"Room(id={self.id}, name={self.name})"
